@@ -1,8 +1,10 @@
 package com.walkingstepcounter.activity
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -44,6 +46,7 @@ import com.walkingstepcounter.R
 import com.walkingstepcounter.viewmodel.StepCounterViewModel
 import com.walkingstepcounter.databinding.ActivityMainBinding
 import com.walkingstepcounter.service.StepCounterForegroundService
+import com.walkingstepcounter.util.formatElapsedTime
 import com.walkingstepcounter.util.getCurrentDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -105,86 +108,6 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
         setContentView(binding.root)
     }
 
-
-
-/*
-    private fun updateChart(weeklySteps: List<Pair<String, Int>>) {
-        val barEntries = ArrayList<Entry>()
-//        val barEntries = ArrayList<BarEntry>()
-        val daysOfWeek = ArrayList<String>()
-
-
-        // Mapping of full day names to their short forms
-        val dayShortNames = mapOf(
-            "Monday" to "Mon",
-            "Tuesday" to "Tue",
-            "Wednesday" to "Wed",
-            "Thursday" to "Thu",
-            "Friday" to "Fri",
-            "Saturday" to "Sat",
-            "Sunday" to "Sun"
-        )
-
-
-        // Calculate total steps
-        var totalSteps = 0
-        weeklySteps.forEachIndexed { index, pair ->
-            val day = pair.first
-            val steps = pair.second ?: 0 // Handle null values by defaulting to 0
-            totalSteps += steps // Accumulate total steps
-            barEntries.add(Entry(index.toFloat(), steps.toFloat()))
-
-            // Convert full day name to short form
-            val shortDay = dayShortNames[day] ?: day // Use the full name if not found in the map
-            daysOfWeek.add(shortDay)
-//            daysOfWeek.add(day)
-        }
-
-        // Create the data set for the bar chart
-        val barDataSet = LineDataSet(barEntries, "Weekly Steps")
-        barDataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-        barDataSet.valueTextSize = 16f
-        barDataSet.valueTextColor = Color.WHITE // Set the value text color to white
-
-        // Create the BarData object
-        val barData = LineData(barDataSet)
-        binding.barChart.data = barData
-
-        // Customize chart appearance
-        binding.barChart.description.isEnabled = false
-        binding.barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM // Position x-axis at the bottom
-        binding.barChart.xAxis.valueFormatter = IndexAxisValueFormatter(daysOfWeek)
-        binding.barChart.xAxis.textColor = Color.WHITE // Set x-axis text color to white
-        binding.barChart.axisLeft.textColor = Color.WHITE // Set left y-axis text color to white
-        binding.barChart.axisRight.isEnabled = false // Disable right y-axis
-        binding.barChart.axisLeft.setDrawGridLines(false) // Disable grid lines on the left y-axis
-        binding.barChart.legend.textColor = Color.WHITE // Set legend text color to white
-
-        // Customize Y-axis
-        binding.barChart.axisLeft.valueFormatter = object : ValueFormatter() {
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                return value.toInt().toString() // Convert float to int for display
-            }
-        }
-
-        // Set Y-axis limits and steps
-        stepViewModel.totalNumOfStep.observe(this, Observer {
-            binding.barChart.axisLeft.axisMaximum = it.toFloat()
-        })
-        // Set the maximum value of Y-axis (adjust as necessary)
-        binding.barChart.axisLeft.axisMinimum = 0f // Set the minimum value of Y-axis
-        binding.barChart.axisLeft.granularity = 100f // Set the granularity to 1000
-        binding.barChart.axisLeft.isGranularityEnabled = true // Enable granularity
-
-        // Animate the chart and refresh
-        binding.barChart.animateY(1000)
-        binding.barChart.invalidate()  // Refresh the chart
-
-        // Display total steps
-//        displayTotalSteps(totalSteps)
-    }*/
-
-
     override fun onResume() {
         super.onResume()
         // Handle permission for Android 10 and above
@@ -205,7 +128,6 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
 
     }
-
 
 
     private fun updateChart(weeklySteps: List<Pair<String, Int>>) {
@@ -355,6 +277,32 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
                         stepViewModel.loadTotalNumOfStep(1)
                         stepViewModel.getCalriesBurned()
                         stepViewModel.getDistance()
+                        startStopTimer(this)
+                        stepViewModel.pauseTimer()
+
+
+
+                        //calries
+                        stepViewModel.calries.observe(this, Observer {
+                                calries ->
+
+                            binding.calries.text = calries.toString()+" Kcal"
+                        })
+
+                        //distance
+                        stepViewModel.distance.observe(this, Observer {
+                                distance ->
+                            binding.distance.text = distance.toString()+" m"
+                        })
+
+                        //time
+                        stepViewModel.timerState.observe(this, Observer {
+                                timer ->
+                            Log.d("timer", "accessActivityRecognition: timer is ----------------  $timer")
+                            binding.time.text = formatElapsedTime(timer.timeSpent)
+                        })
+
+
 
                         stepViewModel.currentNumOfStep.observe(this, Observer {
                             it?.toDouble()
@@ -368,18 +316,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
                                         binding.circularProgressBar.setMaxProgress(it3.toFloat())
                                         binding.circularProgressBar.setTotalStepsText(it3.toString())
 
-                                        //calries
-                                        stepViewModel.calries.observe(this, Observer {
-                                                calries ->
 
-                                            binding.calries.text = calries.toString()+" Kcal"
-                                        })
-
-                                        //distance
-                                        stepViewModel.distance.observe(this, Observer {
-                                            distance ->
-                                            binding.distance.text = distance.toString()+" m"
-                                        })
 
                                         if (it1.toInt() >= it3.toInt())
                                         {
@@ -433,6 +370,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             stepViewModel.startStepCounting()
             startStepCounterService()
             stepViewModel.resetCurrentNumOfSteps(0)
+            resetTimerForNewDay(this)
         }
 
     }
@@ -579,5 +517,46 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             Toast.makeText(this, "Failed to check for updates: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+    private fun startStopTimer(context: Context)
+    {
+        binding.startStopSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Switch is ON, start or resume the timer
+                Log.d("timer", "startStopTimer: switch on ----------------  button on $isChecked")
+
+                stepViewModel.startOrResumeTimer()
+                binding.startStopSwitch.text = "Pause"
+                binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.yellow))
+            } else {
+                Log.d("timer", "startStopTimer: switch off ----------------  button off $isChecked")
+
+                // Switch is OFF, pause the timer
+                stepViewModel.pauseTimer()
+                binding.startStopSwitch.text = "Start"
+                binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+            }
+        }
+
+    }
+
+    private fun resetTimerForNewDay(context: Context) {
+        stepViewModel.pauseTimer()  // Pause the timer and reset data as needed
+        binding.startStopSwitch.isChecked = false
+        binding.startStopSwitch.text = "Start"
+        binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+
+        Log.d("timer", "resetTimerForNewDay: run")
+
+        stepViewModel.pauseTimer()  // Pause the timer to ensure no ongoing timing
+        stepViewModel.resetTimer()  // Reset the timer value in the repository
+
+
+
+    }
+
+
+
 
 }

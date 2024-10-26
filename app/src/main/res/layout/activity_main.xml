@@ -172,6 +172,21 @@
         app:layout_constraintTop_toBottomOf="@+id/calries" />
 
 
+    <Switch
+        android:id="@+id/startStopSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Timer"
+        android:thumbTint="@color/green"
+        android:background="@color/white"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/setGoal"
+        app:layout_constraintStart_toEndOf="@+id/reset"
+        app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+
+
     <ImageView
         android:id="@+id/reset"
         android:layout_width="@dimen/_50sdp"
@@ -188,9 +203,9 @@
         android:layout_height="@dimen/_50sdp"
         android:src="@drawable/running_ic"
         android:text="Reset"
-        app:layout_constraintEnd_toStartOf="@+id/setGoal"
-        app:layout_constraintStart_toEndOf="@+id/reset"
-        app:layout_constraintTop_toBottomOf="@+id/barChart" />
+        app:layout_constraintEnd_toStartOf="@+id/text3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
 
     <ImageView
         android:id="@+id/setGoal"

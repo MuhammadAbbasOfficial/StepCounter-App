@@ -100,6 +100,13 @@ interface StepCounterDAO {
     @Query("UPDATE StepCounter SET age = :age WHERE id = :id")
     suspend fun updateAge(id: Int, age: Int)
 
+    @Query("UPDATE StepCounter SET timeSpent = :timeSpent, timerState = :timerState WHERE id = :id")
+    suspend fun updateTimerState11(id: Int, timeSpent: Long, timerState: String)
 
+    @Query("UPDATE StepCounter SET timeSpent = :timeSpent, timerState = :timerState WHERE id = :id")
+    suspend fun resetTimer(id: Int, timeSpent: Long, timerState: String)
+
+    @Query("SELECT timeSpent, timerState FROM StepCounter WHERE id = :id")
+    fun getTimerStateById(id: Int): LiveData<TimerState>
 
 }

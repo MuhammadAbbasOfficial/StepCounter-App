@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.walkingstepcounter.repository.StepCounterRepository
 import com.walkingstepcounter.room.StepCounterEntity
+import com.walkingstepcounter.room.TimerState
 import com.walkingstepcounter.util.getCurrentDate
 import com.walkingstepcounter.util.getCurrentDayOfWeek
 import com.yourapp.sensor.StepCounterService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -34,7 +37,8 @@ class StepCounterViewModel  @Inject constructor(private val stepCounterService: 
         _sensorAvailable.value = stepCounterService.isSensorAvailable()
 
         stepCounterRowChecking(1)
-//        loadCurrentNumOfStep(1)
+        // Observe the current timer state when ViewModel is initialized
+        loadTimerState()
     }
 
 
@@ -85,6 +89,7 @@ class StepCounterViewModel  @Inject constructor(private val stepCounterService: 
                 // Reset steps if the date has changed
 //                resetStepCounting()
                 resetCurrentNumOfSteps(0)
+                // Reset the timer to start from zero
 
             }
         }
@@ -233,6 +238,95 @@ class StepCounterViewModel  @Inject constructor(private val stepCounterService: 
         }
     }
 
+
+    /*------------------------------------------------------time feature-------------------------------------------------------*/
+
+
+    // LiveData that will observe the current timer state
+    private val _timerState: MutableLiveData<TimerState> = MutableLiveData()
+    val timerState: LiveData<TimerState> get() = _timerState
+
+    // Timer Job for running the timer
+    private var timerJob: Job? = null
+    private var startTime: Long = 0L
+
+
+
+    // Function to load current timer state from repository
+    private fun loadTimerState() {
+        // Observe the TimerState LiveData from the repository
+        repository.getTimerStateById(1).observeForever { timerState ->
+            _timerState.value = timerState
+        }
+    }
+
+    // Function to start or resume the timer
+    fun startOrResumeTimer() {
+        Log.d("timer", "startOrResumeTimer: viewmodel fired")
+        val currentTimerState = _timerState.value
+        if (currentTimerState != null && currentTimerState.timerState == "paused") {
+            // Resume the timer from the last stopped point
+            startTime = 0
+            startTime = System.currentTimeMillis() - currentTimerState.timeSpent
+             updateTimerState("running")
+            Log.d("timer", "startOrResumeTimer: viewmodel fired")
+
+        } else {
+            // Start a new timer
+            startTime = 0
+            startTime = System.currentTimeMillis()
+            updateTimerState("running")
+        }
+
+        startTimer()
+    }
+
+    // Function to pause the timer
+    fun pauseTimer() {
+        timerJob?.cancel() // Stop the timer
+        val elapsed = System.currentTimeMillis() - startTime
+        val updatedTimeSpent = (_timerState.value?.timeSpent ?: 0L) + elapsed
+
+        viewModelScope.launch {
+            repository.updateTimerState(1, updatedTimeSpent, "paused")
+            _timerState.value = TimerState(updatedTimeSpent, "paused")
+        }
+    }
+
+    // Private function to start the timer coroutine
+    private fun startTimer() {
+        timerJob?.cancel()  // Cancel any existing timer job
+
+        timerJob = viewModelScope.launch {
+            while (true) {
+                val elapsed = System.currentTimeMillis() - startTime
+                _timerState.postValue(TimerState(elapsed + (_timerState.value?.timeSpent ?: 0L), "running"))
+                delay(1000)  // Update every second
+            }
+        }
+    }
+
+    // Helper function to update the timer state in the database and in LiveData
+    private fun updateTimerState(state: String) {
+
+        Log.d("timer", "updateTimerState: $state")
+
+        val currentTimerState = _timerState.value ?: TimerState(0L, state)
+
+        viewModelScope.launch {
+            repository.updateTimerState(1, currentTimerState.timeSpent, state)
+            _timerState.postValue(currentTimerState.copy(timerState = state))
+        }
+    }
+
+    // Function to reset the timer
+    fun resetTimer() {
+        timerJob?.cancel() // Stop any running timer job
+        viewModelScope.launch {
+            repository.resetTimer(1, 0L, "paused")
+            _timerState.postValue(TimerState(0L, "paused"))
+        }
+    }
 
 
 

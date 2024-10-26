@@ -2,10 +2,9 @@ package com.walkingstepcounter.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.walkingstepcounter.room.StepCounterDAO
-import com.walkingstepcounter.room.StepCounterDAO_Impl
 import com.walkingstepcounter.room.StepCounterEntity
+import com.walkingstepcounter.room.TimerState
 import com.walkingstepcounter.util.getCurrentDate
 import com.walkingstepcounter.util.getCurrentDayOfWeek
 import com.yourapp.sensor.StepCounterService
@@ -310,6 +309,24 @@ class StepCounterRepository @Inject constructor(private val dao : StepCounterDAO
             roundedDistanceCovered
         }
     }
+
+
+    suspend fun updateTimerState(id: Int, timeSpent: Long, timerState: String) {
+        dao.updateTimerState11(id, timeSpent, timerState)
+    }
+
+    suspend fun resetTimer(id: Int, timeSpent: Long, timerState: String) {
+        dao.resetTimer(id, timeSpent, timerState)
+    }
+
+    fun getTimerStateById(id: Int): LiveData<TimerState> {
+        return dao.getTimerStateById(id)
+    }
+
+
+
+
+
 
 
 }

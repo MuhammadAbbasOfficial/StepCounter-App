@@ -19,5 +19,8 @@ data class StepCounterEntity(
     val thursday : Int,
     val friday : Int,
     val saturday : Int,
-    val sunday : Int
-    )
+    val sunday : Int,
+    val timeSpent: Long = 0L,  // Time in milliseconds
+    val timerState: String = "paused"  // Either "paused" or "running"
+
+)
