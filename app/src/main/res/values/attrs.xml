@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomCircularProgressBar">
+        <attr name="progress" format="float" />
+        <attr name="maxProgress" format="float" />
+        <attr name="progressColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="padding" format="dimension" />
+        <attr name="circleMargins" format="dimension" />
+        <attr name="walkingStepsCounter" format="string" />
+        <attr name="TextFont" format="reference" />
+        <attr name="letterSpacing" format="float"/>
+        <attr name="totalSteps" format="string" />
+
+    </declare-styleable>
+
+</resources>
