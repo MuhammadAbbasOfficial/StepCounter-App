@@ -514,7 +514,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             }
         }.addOnFailureListener { exception ->
             // Handle the exception
-            Toast.makeText(this, "Failed to check for updates: ${exception.message}", Toast.LENGTH_SHORT).show()
+            Log.e("ErrorUpdateFailed", "checkForAppUpdate: ${exception.message}", )
         }
     }
 
