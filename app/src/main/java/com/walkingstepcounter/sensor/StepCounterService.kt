@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import javax.inject.Inject
 class StepCounterService @Inject constructor(
     private val context: Context
@@ -16,6 +17,11 @@ class StepCounterService @Inject constructor(
     private var stepCountListener: ((Int) -> Unit)? = null
     private var initialStepCount: Int = 0
     private var isInitialCountSet = false
+    private var registered = false
+
+    private val callerTrackingMap = mutableMapOf<String, Int>()
+
+
 
     init {
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
@@ -26,15 +32,29 @@ class StepCounterService @Inject constructor(
     }
 
     fun startStepCounting(listener: (Int) -> Unit) {
-        if (isSensorAvailable()) {
-            stepCountListener = listener
-            stepCounterSensor?.also { sensor ->
-                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
+
+        registered = true
+
+
+
+        if (registered)
+        {
+            if (isSensorAvailable()) {
+                stepCountListener = listener
+                stepCounterSensor?.also { sensor ->
+                    sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
+                    Log.d("StepCounterService", "onSensorChanged: sensor registered.......$registered")
+
+                }
+
+            } else {
+                // You can either throw an exception, notify through callback, or handle it internally
+                listener.invoke(-1) // Indicate sensor not available with a special value
+                registered = false
             }
-        } else {
-            // You can either throw an exception, notify through callback, or handle it internally
-            listener.invoke(-1) // Indicate sensor not available with a special value
         }
+
+
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -48,7 +68,30 @@ class StepCounterService @Inject constructor(
 
             val stepsSinceStart = currentStepCount - initialStepCount
 //            stepCountListener?.invoke(stepsSinceStart)
-            stepCountListener?.invoke(1)
+            if (registered)
+            {
+                stepCountListener?.invoke(1)
+
+
+
+                Log.d("StepCounterService", "onSensorChanged: sensor registered.......$registered")
+
+
+                // Identify the caller class
+                val callerClassName = Throwable().stackTrace[1].className
+
+                // Track the number of calls per class
+                callerTrackingMap[callerClassName] = (callerTrackingMap[callerClassName] ?: 0) + 1
+
+                // Log or print the call count
+                Log.d("StepCounterService", "Called by:   $callerClassName ,   Call count:  ${callerTrackingMap[callerClassName]}")
+
+
+
+
+            }else{
+                Log.d("StepCounterService", "onSensorChanged: sensor unregistered.......$registered")
+            }
         }
     }
 
@@ -57,7 +100,14 @@ class StepCounterService @Inject constructor(
     }
 
     fun stopStepCounting() {
-        sensorManager.unregisterListener(this)
+        if (sensorManager != null) {
+            registered = false
+            sensorManager.unregisterListener(this)
+            Log.d("StepCounterService", "Sensor unregistered successfully.")
+        } else {
+            registered = true
+            Log.e("StepCounterService", "Failed to unregister: sensorManager is null.")
+        }
     }
     fun resetStepCounting()
     {

@@ -13,14 +13,12 @@ import com.yourapp.sensor.StepCounterService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StepCounterViewModel  @Inject constructor(private val stepCounterService: StepCounterService,
-    private val repository: StepCounterRepository
+                                                private val repository: StepCounterRepository
     ) : ViewModel() {
 
     private val _sensorAvailable = MutableLiveData<Boolean>()

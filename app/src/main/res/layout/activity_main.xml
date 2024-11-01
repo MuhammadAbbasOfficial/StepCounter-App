@@ -83,14 +83,41 @@
         />
 
 
-    <ImageView
-        android:id="@+id/calries_img"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="24dp"
-        android:src="@drawable/clock_ic"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/calries_progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/time_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/calries_progress"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            app:cpb_progress="40"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="#FFBB3E"
+            app:cpb_progressbar_width="@dimen/_3sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
     <TextView
@@ -102,19 +129,49 @@
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        app:layout_constraintEnd_toEndOf="@+id/calries_img"
-        app:layout_constraintStart_toStartOf="@+id/calries_img"
-        app:layout_constraintTop_toBottomOf="@+id/calries_img" />
+        app:layout_constraintEnd_toEndOf="@+id/calries_progress_layout"
+        app:layout_constraintStart_toStartOf="@+id/calries_progress_layout"
+        app:layout_constraintTop_toBottomOf="@+id/calries_progress_layout" />
 
 
-    <ImageView
-        android:id="@+id/distance_img"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:src="@drawable/distance_ic"
-        app:layout_constraintEnd_toStartOf="@+id/time"
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/distance_img_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/calries"
-        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
+        app:layout_constraintEnd_toStartOf="@+id/time_img_layout"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/distance_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/distance_progress"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            app:cpb_progress="40"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="#FA5E60"
+            app:cpb_progressbar_width="@dimen/_3sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 
@@ -128,20 +185,50 @@
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        app:layout_constraintEnd_toEndOf="@+id/distance_img"
-        app:layout_constraintStart_toStartOf="@+id/distance_img"
-        app:layout_constraintTop_toBottomOf="@+id/distance_img" />
+        app:layout_constraintEnd_toEndOf="@+id/distance_img_layout"
+        app:layout_constraintStart_toStartOf="@+id/distance_img_layout"
+        app:layout_constraintTop_toBottomOf="@+id/distance_img_layout" />
 
 
-
-    <ImageView
-        android:id="@+id/time_img"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginEnd="24dp"
-        android:src="@drawable/fire_ic"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/time_img_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar" />
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/fire_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/time_progress"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            app:cpb_progress="40"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="#4FE059"
+            app:cpb_progressbar_width="@dimen/_3sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
 
     <TextView
@@ -153,9 +240,9 @@
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        app:layout_constraintEnd_toEndOf="@+id/time_img"
-        app:layout_constraintStart_toStartOf="@+id/time_img"
-        app:layout_constraintTop_toBottomOf="@+id/time_img" />
+        app:layout_constraintEnd_toEndOf="@+id/time_img_layout"
+        app:layout_constraintStart_toStartOf="@+id/time_img_layout"
+        app:layout_constraintTop_toBottomOf="@+id/time_img_layout" />
 
 
 
@@ -180,10 +267,38 @@
         android:thumbTint="@color/green"
         android:background="@color/white"
         android:padding="@dimen/_10sdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setGoal"
         app:layout_constraintStart_toEndOf="@+id/reset"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+
+    <ImageView
+        android:id="@+id/start_btn"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:src="@drawable/start_btn_icon"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+
+    <ImageView
+        android:id="@+id/stop_btn"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:src="@drawable/stop_btn_icon"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+
 
 
 
@@ -194,15 +309,20 @@
         android:layout_marginStart="12dp"
         android:src="@drawable/reset"
         android:text="Reset"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/age"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        android:src="@drawable/running_ic"
-        android:text="Reset"
+        app:lottie_rawRes="@raw/weight"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toStartOf="@+id/text3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
@@ -214,6 +334,8 @@
         android:layout_marginRight="@dimen/_10sdp"
         android:src="@drawable/goal"
         android:text="Set Goal"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 

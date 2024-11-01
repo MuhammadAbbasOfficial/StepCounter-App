@@ -46,6 +46,7 @@ import com.walkingstepcounter.R
 import com.walkingstepcounter.viewmodel.StepCounterViewModel
 import com.walkingstepcounter.databinding.ActivityMainBinding
 import com.walkingstepcounter.service.StepCounterForegroundService
+import com.walkingstepcounter.service.StepCounterServiceForg
 import com.walkingstepcounter.util.formatElapsedTime
 import com.walkingstepcounter.util.getCurrentDate
 import dagger.hilt.android.AndroidEntryPoint
@@ -268,7 +269,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
                 stepViewModel.stepCounterRowAvailable.observe(this) { it ->
                     if (it) {
-                        startStopTimer(this)
+                        startStopTimer()
 
                     } else {
                         Log.d("aaa", "accessActivityRecognition: not existed")
@@ -440,129 +441,146 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     }
 
 
-    private fun startStopTimer(context: Context)
+    private fun startStopTimer()
     {
-        binding.startStopSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // Switch is ON, start or resume the timer
-                Log.d("timer", "startStopTimer: switch on ----------------  button on $isChecked")
 
-                stepViewModel.startTimer()
-                binding.startStopSwitch.text = "Pause"
-                binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.yellow))
+        binding.startBtn.setOnClickListener{
+            binding.startBtn.visibility = View.GONE
+            binding.stopBtn.visibility = View.VISIBLE
 
 
 
-                /*-------------------------------------------------------------------------*/
-                Log.d("aaa", "accessActivityRecognition: existed")
-                Log.d("crashreport", "accessActivityRecognition: 0")
-                startStepCounterService()
 
-                // Checking if the previous date exists; the counter will override
-                stepViewModel.handleDateChange()
-                // Load the weekly steps data
-                stepViewModel.loadWeeklySteps()
-                stepViewModel.loadCurrentNumOfStep(1)
-                stepViewModel.loadTotalNumOfStep(1)
-                stepViewModel.getCalriesBurned()
-                stepViewModel.getDistance()
-
-                //calries
-                stepViewModel.calries.observe(this, Observer {
-                        calries ->
-
-                    binding.calries.text = calries.toString()+" Kcal"
-                })
-
-                //distance
-                stepViewModel.distance.observe(this, Observer {
-                        distance ->
-                    binding.distance.text = distance.toString()+" m"
-                })
-
-                //time
-                stepViewModel.timerState.observe(this, Observer {
-                        timer ->
-                    Log.d("timer", "accessActivityRecognition: timer is ----------------  $timer")
-                    binding.time.text = formatElapsedTime(timer.timeSpent)
-                })
+            stepViewModel.startTimer()
 
 
 
-                stepViewModel.currentNumOfStep.observe(this, Observer {
-                    it?.toDouble()
-                        ?.let { it1 ->
-                            Log.d("crashreport", "accessActivityRecognition: 1 = current number of steps : $it1")
+            /*-------------------------------------------------------------------------*/
+            Log.d("aaa", "accessActivityRecognition: existed")
+            Log.d("crashreport", "accessActivityRecognition: 0")
+            startStepCounterService()
 
-                            stepViewModel.totalNumOfStep.observe(this, Observer {
-                                    it3->
-                                Log.d("crashreport", "accessActivityRecognition: 2 and totalnumber of steps = $it3")
+            // Checking if the previous date exists; the counter will override
+            stepViewModel.handleDateChange()
+            // Load the weekly steps data
+            stepViewModel.loadWeeklySteps()
+            stepViewModel.loadCurrentNumOfStep(1)
+            stepViewModel.loadTotalNumOfStep(1)
+            stepViewModel.getCalriesBurned()
+            stepViewModel.getDistance()
 
-                                binding.circularProgressBar.setMaxProgress(it3.toFloat())
-                                binding.circularProgressBar.setTotalStepsText(it3.toString())
+            //calries
+            stepViewModel.calries.observe(this, Observer {
+                    calries ->
+
+                binding.calries.text = calries.toString()+" Kcal"
+            })
+
+            //distance
+            stepViewModel.distance.observe(this, Observer {
+                    distance ->
+                binding.distance.text = distance.toString()+" m"
+            })
+
+            //time
+            stepViewModel.timerState.observe(this, Observer {
+                    timer ->
+                Log.d("timer", "accessActivityRecognition: timer is ----------------  $timer")
+                binding.time.text = formatElapsedTime(timer.timeSpent)
+            })
 
 
 
-                                if (it1.toInt() >= it3.toInt())
+            stepViewModel.currentNumOfStep.observe(this, Observer {
+                it?.toDouble()
+                    ?.let { it1 ->
+                        Log.d("crashreport", "accessActivityRecognition: 1 = current number of steps : $it1")
+
+                        stepViewModel.totalNumOfStep.observe(this, Observer {
+                                it3->
+                            Log.d("crashreport", "accessActivityRecognition: 2 and totalnumber of steps = $it3")
+
+                            binding.circularProgressBar.setMaxProgress(it3.toFloat())
+                            binding.circularProgressBar.setTotalStepsText(it3.toString())
+
+                            binding.timeProgress.progressMax = it3.toFloat()
+                            binding.calriesProgress.progressMax = it3.toFloat()
+                            binding.distanceProgress.progressMax = it3.toFloat()
+
+
+                            if (it1.toInt() >= it3.toInt())
+                            {
+                                Log.d("crashreport", "accessActivityRecognition: 3")
+                                stepViewModel.stopStepCounting()
+                                //stopStepCounterService()
+                                Log.d("aaa", "accessActivityRecognition: 1= $it1 and 2= $it3 ===== completed")
+                                Snackbar.make(
+                                    binding.root,
+                                    "Reset Your Goal.",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+
+                                binding.circularProgressBar.setProgress(it1)
+                                binding.circularProgressBar.setWalkingStepCounter(it3.toString())
+
+                                binding.timeProgress.progress = it1.toFloat()
+                                binding.calriesProgress.progress = it1.toFloat()
+                                binding.distanceProgress.progress = it1.toFloat()
+
+
+                            }else
+                            {
+                                Log.d("crashreport", "accessActivityRecognition: 4")
+                                Log.d("aaa", "accessActivityRecognition: 1 = $it1 and 2 = $it3 ===== not completed")
+
+                                binding.circularProgressBar.setWalkingStepCounter(it1.toInt().toString())
+                                binding.circularProgressBar.setProgress(it1.toInt().toDouble())
+
+
+                                binding.timeProgress.progress = it1.toFloat()
+                                binding.calriesProgress.progress = it1.toFloat()
+                                binding.distanceProgress.progress = it1.toFloat()
+
+                                // Observe the weeklySteps LiveData from the ViewModel
+                                stepViewModel.weeklySteps.observe(this, Observer
                                 {
-                                    Log.d("crashreport", "accessActivityRecognition: 3")
-                                    stepViewModel.stopStepCounting()
-                                    //stopStepCounterService()
-                                    Log.d("aaa", "accessActivityRecognition: 1= $it1 and 2= $it3 ===== completed")
-                                    Snackbar.make(
-                                        binding.root,
-                                        "Reset Your Goal.",
-                                        Snackbar.LENGTH_SHORT
-                                    ).show()
+                                        weeklySteps ->
+                                    updateChart(weeklySteps)
+                                })
+                            }
+                        })
+                    }
+            })
 
-                                    binding.circularProgressBar.setProgress(it1)
-                                    binding.circularProgressBar.setWalkingStepCounter(it3.toString())
+        }
 
-                                }else
-                                {
-                                    Log.d("crashreport", "accessActivityRecognition: 4")
-                                    Log.d("aaa", "accessActivityRecognition: 1 = $it1 and 2 = $it3 ===== not completed")
 
-                                    binding.circularProgressBar.setWalkingStepCounter(it1.toInt().toString())
-                                    binding.circularProgressBar.setProgress(it1.toInt().toDouble())
-                                    // Observe the weeklySteps LiveData from the ViewModel
-                                    stepViewModel.weeklySteps.observe(this, Observer
-                                    {
-                                            weeklySteps ->
-                                        updateChart(weeklySteps)
-                                    })
-                                }
-                            })
-                        }
-                })
-            } else {
-                Log.d("timer", "startStopTimer: switch off ----------------  button off $isChecked")
+        binding.stopBtn.setOnClickListener{
+            binding.stopBtn.visibility = View.GONE
+            binding.startBtn.visibility = View.VISIBLE
 
-                // Switch is OFF, pause the timer
-                stepViewModel.stopStepCounting()
-                stopStepCounterService()
-                stepViewModel.stopTimer()
-                binding.startStopSwitch.text = "Start"
-                binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
-            }
+
+            // Switch is OFF, pause the timer
+            stepViewModel.stopStepCounting()
+            stopStepCounterService()
+            stepViewModel.stopTimer()
+
+
         }
 
     }
 
     private fun resetTimerForNewDay(context: Context) {
-        stepViewModel.stopTimer()  // Pause the timer and reset data as needed
-        binding.startStopSwitch.isChecked = false
-        binding.startStopSwitch.text = "Start"
-        binding.startStopSwitch.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
-
         Log.d("timer", "resetTimerForNewDay: run")
-
         stepViewModel.stopTimer()  // Pause the timer to ensure no ongoing timing
         stepViewModel.resetTimer()  // Reset the timer value in the repository
 
-
-
     }
+
+
+
+
+
 
 
 
