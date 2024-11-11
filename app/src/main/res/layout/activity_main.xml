@@ -9,6 +9,18 @@
     android:background="@color/black"
     tools:context=".activity.MainActivity">
 
+
+    <ImageView
+        android:id="@+id/exportBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:src="@drawable/export_ic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
@@ -299,18 +311,17 @@
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
 
-
-
-
-    <ImageView
+    <Button
         android:id="@+id/reset"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_marginStart="12dp"
-        android:src="@drawable/reset"
-        android:text="Reset"
+        android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
+        android:text="Reset"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/start_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
@@ -327,15 +338,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
 
-    <ImageView
+    <Button
         android:id="@+id/setGoal"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_marginRight="@dimen/_10sdp"
-        android:src="@drawable/goal"
-        android:text="Set Goal"
+        android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
+        android:src="@drawable/goal"
+        android:text="Goal"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/start_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 

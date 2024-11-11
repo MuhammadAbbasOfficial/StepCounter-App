@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -29,9 +28,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
@@ -42,7 +38,6 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.walkingstepcounter.R
 import com.walkingstepcounter.viewmodel.StepCounterViewModel
 import com.walkingstepcounter.databinding.ActivityMainBinding
 import com.walkingstepcounter.service.StepCounterForegroundService
@@ -75,6 +70,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
 
 
 
@@ -270,6 +266,32 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
                 stepViewModel.stepCounterRowAvailable.observe(this) { it ->
                     if (it) {
                         startStopTimer()
+
+                        val steps = stepViewModel.currentNumOfStep.value?.toInt()
+                        val distance = stepViewModel.distance.value?.toInt()
+                        binding.exportBtn.setOnClickListener{
+                            val intent = Intent(this, ExportActivty::class.java)
+                            val bundle = Bundle()
+                            bundle.putInt("steps", steps?:0)
+                            bundle.putInt("distance", distance?:0)
+                            intent.putExtras(bundle)
+                            startActivity(intent)
+                            // Apply custom animations for transition
+//                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
+
+//                            // Create ActivityOptions with custom animations
+//                            val options = ActivityOptions.makeCustomAnimation(
+//                                this,
+//                                R.anim.slide_in_right,
+//                                R.anim.slide_out_left
+//                            )
+//
+//                            // Start the activity with the specified transition animations
+//                            startActivity(intent, options.toBundle())
+
+
+                        }
 
                     } else {
                         Log.d("aaa", "accessActivityRecognition: not existed")
