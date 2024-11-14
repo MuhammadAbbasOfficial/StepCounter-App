@@ -10,6 +10,8 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.airbnb.lottie.LottieCompositionFactory
+import com.airbnb.lottie.LottieDrawable
 
 class CustomCircularProgressBar @JvmOverloads constructor(
     context: Context,
@@ -58,6 +60,23 @@ class CustomCircularProgressBar @JvmOverloads constructor(
     private val iconDrawable2 = ContextCompat.getDrawable(context, R.drawable.running_ic)
     private var iconSize = 10f
     private var circleMargin = 20f
+
+
+
+    /*
+
+        // Create LottieDrawable for iconDrawable2
+        private val lottieDrawable = LottieDrawable().apply {
+            // Load the Lottie animation
+            LottieCompositionFactory.fromRawRes(context, R.raw.lottie_animation).addListener { composition ->
+                this.composition = composition
+                repeatCount = LottieDrawable.INFINITE
+                playAnimation()
+            }
+        }
+    */
+
+
 
     init {
         context.theme.obtainStyledAttributes(

@@ -41,7 +41,6 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.walkingstepcounter.viewmodel.StepCounterViewModel
 import com.walkingstepcounter.databinding.ActivityMainBinding
 import com.walkingstepcounter.service.StepCounterForegroundService
-import com.walkingstepcounter.service.StepCounterServiceForg
 import com.walkingstepcounter.util.formatElapsedTime
 import com.walkingstepcounter.util.getCurrentDate
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,6 +99,11 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
         binding.age.setOnClickListener{
             showStepAgeDialog()
+        }
+
+        binding.settingBtn.setOnClickListener{
+            val i = Intent(this, SettingActivity::class.java)
+            startActivity(i)
         }
 
         setContentView(binding.root)
@@ -266,10 +270,9 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
                 stepViewModel.stepCounterRowAvailable.observe(this) { it ->
                     if (it) {
                         startStopTimer()
-
-                        val steps = stepViewModel.currentNumOfStep.value?.toInt()
-                        val distance = stepViewModel.distance.value?.toInt()
                         binding.exportBtn.setOnClickListener{
+                            val steps = stepViewModel.currentNumOfStep.value?.toInt()
+                            val distance = stepViewModel.distance.value?.toInt()
                             val intent = Intent(this, ExportActivty::class.java)
                             val bundle = Bundle()
                             bundle.putInt("steps", steps?:0)
@@ -356,6 +359,37 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             .show()
     }
 
+
+   /* private fun showPermissionRationale() {
+        // Inflate the custom dialog layout
+        val dialogView = layoutInflater.inflate(R.layout.custom_dialog_layout, null)
+
+        // Create the dialog
+        val customDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        customDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Set up buttons in the custom layout
+        val okButton = dialogView.findViewById<Button>(R.id.okButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        // Handle the OK button click to request permission
+        okButton.setOnClickListener {
+            requestPermissionLauncher.launch(android.Manifest.permission.ACTIVITY_RECOGNITION)
+            customDialog.dismiss()
+        }
+
+        // Handle the Cancel button click to close the dialog
+        cancelButton.setOnClickListener {
+            customDialog.dismiss()
+        }
+
+        // Show the custom dialog
+        customDialog.show()
+    }*/
+
+
     private fun showSettingsDialog() {
         AlertDialog.Builder(this)
             .setTitle("Permission Denied")
@@ -371,8 +405,41 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             .show()
     }
 
+/*    private fun showSettingsDialog() {
+        // Inflate the custom dialog layout
+        val dialogView = layoutInflater.inflate(R.layout.custom_settings_dialog_layout, null)
 
-    private fun showStepGoalDialog() {
+        // Create the dialog
+        val customDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        customDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Set up buttons in the custom layout
+        val settingsButton = dialogView.findViewById<Button>(R.id.settingsButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+        // Handle the Settings button click to open app settings
+        settingsButton.setOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", packageName, null)
+            intent.data = uri
+            startActivity(intent)
+            customDialog.dismiss()
+        }
+
+        // Handle the Cancel button click to close the dialog
+        cancelButton.setOnClickListener {
+            customDialog.dismiss()
+        }
+
+        // Show the custom dialog
+        customDialog.show()
+    }*/
+
+
+
+      private fun showStepGoalDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Set Step Goal")
         // Set up the input
@@ -398,7 +465,42 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
         builder.show()
     }
+  /*private fun showStepGoalDialog() {
+      // Inflate the custom dialog layout
+      val dialogView = layoutInflater.inflate(R.layout.custom_step_goal_dialog_layout, null)
 
+      // Create the dialog
+      val customDialog = AlertDialog.Builder(this)
+          .setView(dialogView)
+          .create()
+        customDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+      // Find views in the custom layout
+      val inputStepGoal = dialogView.findViewById<EditText>(R.id.inputStepGoal)
+      val okButton = dialogView.findViewById<Button>(R.id.okButton)
+      val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+      // Handle OK button click
+      okButton.setOnClickListener {
+          val stepGoal = inputStepGoal.text.toString().toIntOrNull()
+          if (stepGoal != null) {
+              // Pass the value to ViewModel to update total number of steps
+              stepViewModel.updateTotalSteps(stepGoal)
+              binding.circularProgressBar.setMaxProgress(stepGoal.toFloat())
+              customDialog.dismiss()
+          } else {
+              Toast.makeText(this, "Invalid number", Toast.LENGTH_SHORT).show()
+          }
+      }
+
+      // Handle Cancel button click
+      cancelButton.setOnClickListener {
+          customDialog.dismiss()
+      }
+
+      // Show the custom dialog
+      customDialog.show()
+  }*/
 
     private fun showStepAgeDialog() {
         val builder = AlertDialog.Builder(this)
@@ -427,6 +529,41 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     }
 
 
+/*private fun showStepAgeDialog() {
+    // Inflate the custom dialog layout
+    val dialogView = layoutInflater.inflate(R.layout.custom_age_dialog_layout, null)
+
+    // Create the dialog
+    val customDialog = AlertDialog.Builder(this)
+        .setView(dialogView)
+        .create()
+    customDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    // Find views in the custom layout
+    val inputWeight = dialogView.findViewById<EditText>(R.id.inputWeight)
+    val okButton = dialogView.findViewById<Button>(R.id.okButton)
+    val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+
+    // Handle OK button click
+    okButton.setOnClickListener {
+        val age = inputWeight.text.toString().toIntOrNull()
+        if (age != null) {
+            // Pass the value to ViewModel to update weight
+            stepViewModel.updateAge(age)
+            customDialog.dismiss()
+        } else {
+            Toast.makeText(this, "Invalid number", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Handle Cancel button click
+    cancelButton.setOnClickListener {
+        customDialog.dismiss()
+    }
+
+    // Show the custom dialog
+    customDialog.show()
+}*/
 
 
 
@@ -467,15 +604,10 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     {
 
         binding.startBtn.setOnClickListener{
-            binding.startBtn.visibility = View.GONE
+            binding.startBtn.visibility = View.INVISIBLE
             binding.stopBtn.visibility = View.VISIBLE
 
-
-
-
             stepViewModel.startTimer()
-
-
 
             /*-------------------------------------------------------------------------*/
             Log.d("aaa", "accessActivityRecognition: existed")
@@ -578,7 +710,7 @@ class MainActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
 
         binding.stopBtn.setOnClickListener{
-            binding.stopBtn.visibility = View.GONE
+            binding.stopBtn.visibility = View.INVISIBLE
             binding.startBtn.visibility = View.VISIBLE
 
 

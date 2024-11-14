@@ -12,14 +12,25 @@
 
     <ImageView
         android:id="@+id/exportBtn"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_28sdp"
         android:src="@drawable/export_ic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_30sdp"
         />
+
+    <ImageView
+        android:id="@+id/settingBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/settings_ic"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -34,16 +45,17 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Walking"
+            android:text="Step"
             android:textSize="@dimen/_16ssp"
+            android:fontFamily="@font/poppins_bold"
             android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text=" Step Tracker"
+            android:fontFamily="@font/poppins_regular"
+            android:text=" Up"
             android:textSize="@dimen/_16ssp"
             android:textColor="@color/white" />
 
@@ -54,23 +66,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_regular"
-        android:letterSpacing="1"
+        android:letterSpacing="0.1"
         android:textSize="@dimen/_11ssp"
-        android:text="Pedometer"
+        android:text="Your Step Counter"
         android:textColor="@color/blue"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/_34sdp"
-        android:layout_height="@dimen/_34sdp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="@dimen/_44sdp"
+        android:layout_height="@dimen/_44sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:src="@drawable/walking_step_app_logo"
         app:layout_constraintBottom_toBottomOf="@+id/text3"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/text3"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
 
@@ -88,8 +99,8 @@
         app:TextFont="@font/poppins_bold"
         app:walkingStepsCounter="0"
         app:progressColor="@color/blue"
-        app:maxProgress="1000"
-        app:totalSteps="1000"
+        app:maxProgress="0"
+        app:totalSteps="0"
         app:letterSpacing="0.2"
         android:layout_marginHorizontal="@dimen/_20sdp"
         />
@@ -136,7 +147,7 @@
         android:id="@+id/calries"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5 Kcal"
+        android:text="0 Kcal"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
@@ -192,7 +203,7 @@
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="17 mm"
+        android:text="0 m"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
@@ -247,7 +258,7 @@
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="7 min"
+        android:text="0 min"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
@@ -255,9 +266,6 @@
         app:layout_constraintEnd_toEndOf="@+id/time_img_layout"
         app:layout_constraintStart_toStartOf="@+id/time_img_layout"
         app:layout_constraintTop_toBottomOf="@+id/time_img_layout" />
-
-
-
 
 
     <com.github.mikephil.charting.charts.BarChart
@@ -293,6 +301,7 @@
         android:src="@drawable/start_btn_icon"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
@@ -303,7 +312,7 @@
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:src="@drawable/stop_btn_icon"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -311,15 +320,16 @@
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
 
-    <Button
+    <ImageView
         android:id="@+id/reset"
         android:layout_width="@dimen/_80sdp"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_height="@dimen/_28sdp"
         android:layout_marginStart="12dp"
         android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
         android:text="Reset"
+        android:src="@drawable/reset_ic"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/start_btn"
         app:layout_constraintStart_toStartOf="parent"
@@ -338,20 +348,75 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
 
-    <Button
+<!--
+    <ImageView
         android:id="@+id/setGoal"
-        android:layout_width="@dimen/_80sdp"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_width="@dimen/_28sdp"
+        android:layout_height="@dimen/_28sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/goal"
+        android:src="@drawable/goal_ic"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:background="@drawable/ripple_effect"
         android:text="Goal"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/start_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
+-->
+
+
+    <ImageView
+        android:id="@+id/setGoal"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:src="@drawable/goal_ic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barChart"
+        tools:layout_gravity="center"
+        tools:layout_margin="24dp" />
+
+
+<!--    <ImageView
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:src="@drawable/goal_ic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barChart" />-->
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Reset"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:textColor="#FF888888"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@+id/reset"
+        app:layout_constraintStart_toStartOf="@+id/reset"
+        app:layout_constraintTop_toBottomOf="@+id/reset" />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Goal"
+        android:textColor="#FF888888"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@+id/setGoal"
+        app:layout_constraintStart_toStartOf="@+id/setGoal"
+        app:layout_constraintTop_toBottomOf="@+id/setGoal" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

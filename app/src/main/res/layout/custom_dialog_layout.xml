@@ -1,0 +1,74 @@
+<!-- res/layout/custom_dialog_layout.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:layout_margin="@dimen/_20sdp"
+    app:cardCornerRadius="@dimen/_10sdp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/_20sdp"
+        >
+
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Permission Needed"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/messageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This app needs the Activity Recognition permission to track your steps. Please allow it for full functionality."
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            >
+
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:textSize="@dimen/_11ssp"
+                android:text="Cancel"
+                android:backgroundTint="@color/black"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_10sdp"
+                />
+
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:text="OK"
+                android:textSize="@dimen/_11ssp"
+                android:backgroundTint="@color/black"
+                android:layout_gravity="center"/>
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
